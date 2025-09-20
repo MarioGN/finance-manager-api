@@ -25,11 +25,11 @@ const (
 )
 
 type Expense struct {
-	id          string
-	amount      int64
-	description string
-	date        time.Time
-	expenseType ExpenseType
+	id          string      `json:"id"`
+	amount      int64       `json:"amount"`
+	description string      `json:"description"`
+	date        time.Time   `json:"date"`
+	expenseType ExpenseType `json:"expense_type"`
 }
 
 func NewExpense(amount int64, description string, date time.Time, expeseType ExpenseType) (*Expense, error) {
@@ -56,6 +56,27 @@ func NewExpense(amount int64, description string, date time.Time, expeseType Exp
 	}, nil
 }
 
-type ApplicationError struct {
-	Message string
+func (e *Expense) ToDTO() *ListExpensesResponse {
+	return &ListExpensesResponse{
+		ID:          e.id,
+		Amount:      e.amount,
+		Description: e.description,
+		Date:        e.date.Format("2006-01-02"),
+		ExpenseType: e.expenseType,
+	}
+}
+
+type ListExpensesResponse struct {
+	ID          string      `json:"id"`
+	Amount      int64       `json:"amount"`
+	Description string      `json:"description"`
+	Date        string      `json:"date"`
+	ExpenseType ExpenseType `json:"expense_type"`
+}
+
+type CreateExpenseRequest struct {
+	Amount      float64 `json:"amount"`
+	Description string  `json:"description"`
+	Date        string  `json:"date"`
+	ExpenseType string  `json:"expense_type"`
 }

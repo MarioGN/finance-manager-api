@@ -1,5 +1,8 @@
 package main
 
 func main() {
-	println("App is running!")
+	store := NewInMemoryStore()
+	srv := NewServer(store)
+
+	srv.Start()
 }
