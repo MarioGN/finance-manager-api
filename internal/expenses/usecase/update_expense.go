@@ -17,7 +17,7 @@ func NewUpdateExpenseUseCase(store data.Store) *UpdateExpenseUseCase {
 	return &UpdateExpenseUseCase{store: store}
 }
 
-func (uc *UpdateExpenseUseCase) Execute(id string, input dto.UpdateExpenseRequest) (result *dto.ListExpensesResponse, err error) {
+func (uc *UpdateExpenseUseCase) Execute(id string, input dto.ExpenseDTO) (result *dto.ExpenseDTO, err error) {
 	dbExpense, err := uc.store.Expenses.FindByID(id)
 	if err != nil {
 		return nil, err

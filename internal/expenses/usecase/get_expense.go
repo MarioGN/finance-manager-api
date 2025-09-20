@@ -15,7 +15,7 @@ func NewGetExpenseUseCase(store data.Store) *GetExpenseUseCase {
 	return &GetExpenseUseCase{store: store}
 }
 
-func (uc *GetExpenseUseCase) Execute(id string) (result *dto.ListExpensesResponse, err error) {
+func (uc *GetExpenseUseCase) Execute(id string) (result *dto.ExpenseDTO, err error) {
 	expense, err := uc.store.Expenses.FindByID(id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find expense by ID: %w", err)

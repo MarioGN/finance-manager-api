@@ -17,7 +17,7 @@ func NewCreateExpenseUseCase(store data.Store) *CreateExpenseUseCase {
 	return &CreateExpenseUseCase{store: store}
 }
 
-func (uc *CreateExpenseUseCase) Execute(input dto.CreateExpenseRequest) (result *dto.ListExpensesResponse, err error) {
+func (uc *CreateExpenseUseCase) Execute(input dto.ExpenseDTO) (result *dto.ExpenseDTO, err error) {
 	date, err := time.Parse("2006-01-02", input.Date)
 	if err != nil {
 		return nil, fmt.Errorf("invalid date format: %w", err)

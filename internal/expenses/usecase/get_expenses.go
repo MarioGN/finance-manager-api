@@ -17,7 +17,7 @@ func NewGetExpensesUseCase(store data.Store) *GetExpensesUseCase {
 	}
 }
 
-func (uc *GetExpensesUseCase) Execute() (list []dto.ListExpensesResponse, err error) {
+func (uc *GetExpensesUseCase) Execute() (list []dto.ExpenseDTO, err error) {
 	expenses, err := uc.store.Expenses.FindAll()
 	if err != nil {
 		return nil, fmt.Errorf("failed to list expenses: %w", err)

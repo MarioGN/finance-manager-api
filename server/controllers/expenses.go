@@ -33,7 +33,7 @@ func (ctrl *expenseController) handleGetExpenses(c echo.Context) error {
 }
 
 func (ctrl *expenseController) handleCreateExpense(c echo.Context) error {
-	var req dto.CreateExpenseRequest
+	var req dto.ExpenseDTO
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(400, map[string]string{"error": "invalid request payload"})
 	}
@@ -65,7 +65,7 @@ func (ctrl *expenseController) handleGetExpenseByID(c echo.Context) error {
 }
 
 func (ctrl *expenseController) handleUpdateExpense(c echo.Context) error {
-	var req dto.UpdateExpenseRequest
+	var req dto.ExpenseDTO
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(400, map[string]string{"error": "invalid request payload"})
 	}

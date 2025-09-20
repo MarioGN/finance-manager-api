@@ -79,8 +79,8 @@ func (e *Expense) SetExpenseType(expenseType ExpenseType) error {
 	return nil
 }
 
-func (e *Expense) ToDTO() *dto.ListExpensesResponse {
-	return &dto.ListExpensesResponse{
+func (e *Expense) ToDTO() *dto.ExpenseDTO {
+	return &dto.ExpenseDTO{
 		ID:          e.id,
 		Amount:      e.amount,
 		Description: e.description,
