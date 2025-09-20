@@ -4,16 +4,17 @@ import (
 	"time"
 
 	exp "github.com/MarioGN/finance-manager-api/core/expenses"
+	"github.com/MarioGN/finance-manager-api/data"
 
 	"github.com/labstack/echo/v4"
 )
 
 type server struct {
 	echo  *echo.Echo
-	store Store
+	store *data.Store
 }
 
-func NewServer(store Store) *server {
+func NewServer(store *data.Store) *server {
 	return &server{
 		echo:  echo.New(),
 		store: store,
@@ -41,7 +42,7 @@ func (s *server) configureRoutes() {
 }
 
 func (s *server) getExpensesHandler(c echo.Context) error {
-	expenses, err := s.store.FindAllExpenses()
+	expenses, err := s.store.Expenses.FindAll()
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "failed to list expenses"})
 	}
@@ -70,7 +71,7 @@ func (s *server) createExpenseHandler(c echo.Context) error {
 		return c.JSON(400, map[string]string{"error": err.Error()})
 	}
 
-	err = s.store.SaveExpense(*newExpense)
+	err = s.store.Expenses.Save(*newExpense)
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "something went wrong while saving the expense"})
 	}
@@ -81,7 +82,7 @@ func (s *server) createExpenseHandler(c echo.Context) error {
 func (s *server) getExpenseByIDHandler(c echo.Context) error {
 	id := c.Param("id")
 
-	expense, err := s.store.FindExpenseByID(id)
+	expense, err := s.store.Expenses.FindByID(id)
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "failed to retrieve expense"})
 	}
@@ -101,7 +102,7 @@ func (s *server) updateExpenseHandler(c echo.Context) error {
 
 	id := c.Param("id")
 
-	saved, err := s.store.FindExpenseByID(id)
+	saved, err := s.store.Expenses.FindByID(id)
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "failed to retrieve expense"})
 	}
@@ -131,12 +132,12 @@ func (s *server) updateExpenseHandler(c echo.Context) error {
 		return c.JSON(400, map[string]string{"error": err.Error()})
 	}
 
-	err = s.store.UpdateExpense(*saved)
+	err = s.store.Expenses.Update(*saved)
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "something went wrong while updating the expense"})
 	}
 
-	updated, err := s.store.FindExpenseByID(id)
+	updated, err := s.store.Expenses.FindByID(id)
 	if err != nil || updated == nil {
 		return c.JSON(500, map[string]string{"error": "failed to retrieve updated expense"})
 	}
@@ -147,7 +148,7 @@ func (s *server) updateExpenseHandler(c echo.Context) error {
 func (s *server) deleteExpenseHandler(c echo.Context) error {
 	id := c.Param("id")
 
-	saved, err := s.store.FindExpenseByID(id)
+	saved, err := s.store.Expenses.FindByID(id)
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "failed to retrieve expense"})
 	}
@@ -156,7 +157,7 @@ func (s *server) deleteExpenseHandler(c echo.Context) error {
 		return c.JSON(404, map[string]string{"error": "expense not found"})
 	}
 
-	err = s.store.DeleteExpense(id)
+	err = s.store.Expenses.Delete(id)
 	if err != nil {
 		return c.JSON(500, map[string]string{"error": "something went wrong while deleting the expense"})
 	}
