@@ -1,9 +1,10 @@
-package expenses
+package entity
 
 import (
 	"errors"
 	"time"
 
+	dto "github.com/MarioGN/finance-manager-api/internal/expenses/dto"
 	"github.com/google/uuid"
 )
 
@@ -78,13 +79,13 @@ func (e *Expense) SetExpenseType(expenseType ExpenseType) error {
 	return nil
 }
 
-func (e *Expense) ToDTO() *ListExpensesResponse {
-	return &ListExpensesResponse{
+func (e *Expense) ToDTO() *dto.ListExpensesResponse {
+	return &dto.ListExpensesResponse{
 		ID:          e.id,
 		Amount:      e.amount,
 		Description: e.description,
 		Date:        e.date.Format("2006-01-02"),
-		ExpenseType: e.expenseType,
+		ExpenseType: string(e.expenseType),
 	}
 }
 

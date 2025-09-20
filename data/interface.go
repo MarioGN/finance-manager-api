@@ -1,13 +1,11 @@
 package data
 
-import (
-	"github.com/MarioGN/finance-manager-api/core/expenses"
-)
+import "github.com/MarioGN/finance-manager-api/internal/expenses/entity"
 
 type ExpenseRepository interface {
-	FindAll() ([]expenses.Expense, error)
-	Save(expense expenses.Expense) error
-	FindByID(id string) (*expenses.Expense, error)
-	Update(expense expenses.Expense) error
+	FindAll() ([]entity.Expense, error)
+	Save(expense entity.Expense) error
+	FindByID(id string) (*entity.Expense, error)
+	Update(expense entity.Expense) error
 	Delete(id string) error
 }

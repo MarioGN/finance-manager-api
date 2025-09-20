@@ -1,4 +1,4 @@
-package expenses
+package entity
 
 const (
 	FixedExpense     ExpenseType = "fixed"

@@ -1,4 +1,4 @@
-package expenses
+package entity
 
 import (
 	"testing"
