@@ -4,6 +4,7 @@ import (
 	"github.com/MarioGN/finance-manager-api/data"
 	"github.com/MarioGN/finance-manager-api/internal/expenses/dto"
 	"github.com/MarioGN/finance-manager-api/internal/expenses/usecase"
+	"github.com/MarioGN/finance-manager-api/pkg/errors"
 	"github.com/labstack/echo/v4"
 )
 
@@ -26,7 +27,7 @@ func (ctrl *expenseController) handleGetExpenses(c echo.Context) error {
 
 	res, err := uc.Execute()
 	if err != nil {
-		return c.JSON(500, map[string]string{"error": "failed to list expenses"})
+		return c.JSON(500, errors.InternnalServerError)
 	}
 
 	return c.JSON(200, res)
@@ -35,14 +36,14 @@ func (ctrl *expenseController) handleGetExpenses(c echo.Context) error {
 func (ctrl *expenseController) handleCreateExpense(c echo.Context) error {
 	var req dto.ExpenseDTO
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(400, map[string]string{"error": "invalid request payload"})
+		return c.JSON(400, errors.InvalidRequestError)
 	}
 
 	uc := usecase.NewCreateExpenseUseCase(*ctrl.store)
 
 	res, err := uc.Execute(req)
 	if err != nil {
-		return c.JSON(500, map[string]string{"error": "failed to create expense"})
+		return c.JSON(500, errors.InternnalServerError)
 	}
 
 	return c.JSON(201, res)
@@ -54,11 +55,11 @@ func (ctrl *expenseController) handleGetExpenseByID(c echo.Context) error {
 
 	res, err := uc.Execute(id)
 	if err != nil {
-		return c.JSON(500, map[string]string{"error": "failed to get expense"})
+		return c.JSON(500, errors.InternnalServerError)
 	}
 
 	if res == nil {
-		return c.JSON(404, map[string]string{"error": "expense not found"})
+		return c.JSON(404, errors.NotFoundError)
 	}
 
 	return c.JSON(200, res)
@@ -67,16 +68,15 @@ func (ctrl *expenseController) handleGetExpenseByID(c echo.Context) error {
 func (ctrl *expenseController) handleUpdateExpense(c echo.Context) error {
 	var req dto.ExpenseDTO
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(400, map[string]string{"error": "invalid request payload"})
+		return c.JSON(400, errors.InvalidRequestError)
 	}
 
 	id := c.Param("id")
-
 	uc := usecase.NewUpdateExpenseUseCase(*ctrl.store)
 
 	res, err := uc.Execute(id, req)
 	if err != nil {
-		return c.JSON(500, map[string]string{"error": "failed to update expense"})
+		return c.JSON(500, errors.InternnalServerError)
 	}
 
 	return c.JSON(200, res)
@@ -89,7 +89,7 @@ func (ctrl *expenseController) handleDeleteExpense(c echo.Context) error {
 
 	err := uc.Execute(id)
 	if err != nil {
-		return c.JSON(500, map[string]string{"error": "failed to delete expense"})
+		return c.JSON(500, errors.InternnalServerError)
 	}
 
 	return c.NoContent(204)

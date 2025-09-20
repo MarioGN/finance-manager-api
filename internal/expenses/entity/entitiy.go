@@ -80,9 +80,11 @@ func (e *Expense) SetExpenseType(expenseType ExpenseType) error {
 }
 
 func (e *Expense) ToDTO() *dto.ExpenseDTO {
+	floatAmount := float64(e.amount) / 100.0
+
 	return &dto.ExpenseDTO{
 		ID:          e.id,
-		Amount:      e.amount,
+		Amount:      floatAmount,
 		Description: e.description,
 		Date:        e.date.Format("2006-01-02"),
 		ExpenseType: string(e.expenseType),
