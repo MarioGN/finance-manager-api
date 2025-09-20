@@ -3,6 +3,8 @@ package main
 import (
 	"time"
 
+	exp "github.com/MarioGN/finance-manager-api/core/expenses"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -53,7 +55,7 @@ func (s *server) getExpensesHandler(c echo.Context) error {
 }
 
 func (s *server) createExpenseHandler(c echo.Context) error {
-	var req CreateExpenseRequest
+	var req exp.CreateExpenseRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(400, map[string]string{"error": "invalid request payload"})
 	}
@@ -63,7 +65,7 @@ func (s *server) createExpenseHandler(c echo.Context) error {
 		return c.JSON(400, map[string]string{"error": "invalid date format, expected YYYY-MM-DD"})
 	}
 
-	newExpense, err := NewExpense(int64(req.Amount*100), req.Description, date, ExpenseType(req.ExpenseType))
+	newExpense, err := exp.NewExpense(int64(req.Amount*100), req.Description, date, exp.ExpenseType(req.ExpenseType))
 	if err != nil {
 		return c.JSON(400, map[string]string{"error": err.Error()})
 	}
@@ -92,7 +94,7 @@ func (s *server) getExpenseByIDHandler(c echo.Context) error {
 }
 
 func (s *server) updateExpenseHandler(c echo.Context) error {
-	var req UpdateExpenseRequest
+	var req exp.UpdateExpenseRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(400, map[string]string{"error": "invalid request payload"})
 	}
@@ -124,7 +126,7 @@ func (s *server) updateExpenseHandler(c echo.Context) error {
 		return c.JSON(400, map[string]string{"error": err.Error()})
 	}
 
-	err = saved.SetExpenseType(ExpenseType(req.ExpenseType))
+	err = saved.SetExpenseType(exp.ExpenseType(req.ExpenseType))
 	if err != nil {
 		return c.JSON(400, map[string]string{"error": err.Error()})
 	}

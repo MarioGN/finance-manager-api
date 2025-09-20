@@ -1,54 +1,58 @@
 package main
 
-import "time"
+import (
+	"time"
+
+	exp "github.com/MarioGN/finance-manager-api/core/expenses"
+)
 
 type Store interface {
-	FindAllExpenses() ([]Expense, error)
-	SaveExpense(expense Expense) error
-	FindExpenseByID(id string) (*Expense, error)
-	UpdateExpense(expense Expense) error
+	FindAllExpenses() ([]exp.Expense, error)
+	SaveExpense(expense exp.Expense) error
+	FindExpenseByID(id string) (*exp.Expense, error)
+	UpdateExpense(expense exp.Expense) error
 	DeleteExpense(id string) error
 }
 
 type InMemoryStore struct {
-	expenses []Expense
+	expenses []exp.Expense
 }
 
 func NewInMemoryStore() *InMemoryStore {
-	expenses := []Expense{}
+	expenses := []exp.Expense{}
 
-	exp, _ := NewExpense(10000, "Electricity bill", time.Now(), VariableExpense)
-	expenses = append(expenses, *exp)
+	ex, _ := exp.NewExpense(10000, "Electricity bill", time.Now(), exp.VariableExpense)
+	expenses = append(expenses, *ex)
 
-	exp, _ = NewExpense(50000, "Rent", time.Now(), FixedExpense)
-	expenses = append(expenses, *exp)
+	ex, _ = exp.NewExpense(50000, "Rent", time.Now(), exp.FixedExpense)
+	expenses = append(expenses, *ex)
 
 	return &InMemoryStore{
 		expenses: expenses,
 	}
 }
 
-func (s *InMemoryStore) FindAllExpenses() ([]Expense, error) {
+func (s *InMemoryStore) FindAllExpenses() ([]exp.Expense, error) {
 	return s.expenses, nil
 }
 
-func (s *InMemoryStore) SaveExpense(expense Expense) error {
+func (s *InMemoryStore) SaveExpense(expense exp.Expense) error {
 	s.expenses = append(s.expenses, expense)
 	return nil
 }
 
-func (s *InMemoryStore) FindExpenseByID(id string) (*Expense, error) {
-	for _, exp := range s.expenses {
-		if exp.id == id {
-			return &exp, nil
+func (s *InMemoryStore) FindExpenseByID(id string) (*exp.Expense, error) {
+	for _, e := range s.expenses {
+		if e.ID() == id {
+			return &e, nil
 		}
 	}
 	return nil, nil
 }
 
-func (s *InMemoryStore) UpdateExpense(expense Expense) error {
-	for i, exp := range s.expenses {
-		if exp.id == expense.id {
+func (s *InMemoryStore) UpdateExpense(expense exp.Expense) error {
+	for i, e := range s.expenses {
+		if e.ID() == expense.ID() {
 			s.expenses[i] = expense
 			return nil
 		}
@@ -58,7 +62,7 @@ func (s *InMemoryStore) UpdateExpense(expense Expense) error {
 
 func (s *InMemoryStore) DeleteExpense(id string) error {
 	for i, exp := range s.expenses {
-		if exp.id == id {
+		if exp.ID() == id {
 			s.expenses = append(s.expenses[:i], s.expenses[i+1:]...)
 			return nil
 		}
