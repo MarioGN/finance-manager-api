@@ -25,11 +25,11 @@ const (
 )
 
 type Expense struct {
-	id          string      `json:"id"`
-	amount      int64       `json:"amount"`
-	description string      `json:"description"`
-	date        time.Time   `json:"date"`
-	expenseType ExpenseType `json:"expense_type"`
+	id          string
+	amount      int64
+	description string
+	date        time.Time
+	expenseType ExpenseType
 }
 
 func NewExpense(amount int64, description string, date time.Time, expeseType ExpenseType) (*Expense, error) {
@@ -56,6 +56,34 @@ func NewExpense(amount int64, description string, date time.Time, expeseType Exp
 	}, nil
 }
 
+func (e *Expense) SetAmount(amount int64) error {
+	if amount <= 0 {
+		return errors.New("amount must be greater than zero")
+	}
+	e.amount = amount
+	return nil
+}
+
+func (e *Expense) SetDescription(description string) {
+	e.description = description
+}
+
+func (e *Expense) SetDate(date time.Time) error {
+	if date.IsZero() {
+		return errors.New("date must be a valid date")
+	}
+	e.date = date
+	return nil
+}
+
+func (e *Expense) SetExpenseType(expenseType ExpenseType) error {
+	if !expenseType.IsValid() {
+		return errors.New("invalid expense type")
+	}
+	e.expenseType = expenseType
+	return nil
+}
+
 func (e *Expense) ToDTO() *ListExpensesResponse {
 	return &ListExpensesResponse{
 		ID:          e.id,
@@ -75,6 +103,13 @@ type ListExpensesResponse struct {
 }
 
 type CreateExpenseRequest struct {
+	Amount      float64 `json:"amount"`
+	Description string  `json:"description"`
+	Date        string  `json:"date"`
+	ExpenseType string  `json:"expense_type"`
+}
+
+type UpdateExpenseRequest struct {
 	Amount      float64 `json:"amount"`
 	Description string  `json:"description"`
 	Date        string  `json:"date"`
