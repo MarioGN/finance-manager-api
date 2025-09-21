@@ -17,16 +17,20 @@ func NewGetExpensesUseCase(store data.Store) *GetExpensesUseCase {
 	}
 }
 
-func (uc *GetExpensesUseCase) Execute() (list []dto.ExpenseDTO, err error) {
+func (uc *GetExpensesUseCase) Execute() (result []dto.ExpenseDTO, err error) {
 	expenses, err := uc.store.Expenses.FindAll()
 	if err != nil {
 		return nil, fmt.Errorf("failed to list expenses: %w", err)
 	}
 
-	for _, e := range expenses {
-		result := e.ToDTO()
-		list = append(list, *result)
+	if len(expenses) == 0 {
+		return []dto.ExpenseDTO{}, nil
 	}
 
-	return list, nil
+	for _, e := range expenses {
+		dto := e.ToDTO()
+		result = append(result, *dto)
+	}
+
+	return result, nil
 }

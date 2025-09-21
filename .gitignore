@@ -2,3 +2,6 @@
 /.ignore
 coverage-report/
 *.out
+
+*.db
+*.sqlite

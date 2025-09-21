@@ -94,3 +94,23 @@ func (e *Expense) ToDTO() *dto.ExpenseDTO {
 func (e *Expense) ID() string {
 	return e.id
 }
+
+func (e *Expense) Amount() int64 {
+	return e.amount
+}
+
+func (e *Expense) Description() string {
+	return e.description
+}
+
+func (e *Expense) Date() time.Time {
+	return e.date
+}
+
+func (e *Expense) ExpenseType() ExpenseType {
+	return e.expenseType
+}
+
+func (e *Expense) SetID(id string) {
+	e.id = id
+}

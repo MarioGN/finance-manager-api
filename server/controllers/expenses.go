@@ -54,11 +54,7 @@ func (ctrl *expenseController) handleGetExpenseByID(c echo.Context) error {
 	uc := usecase.NewGetExpenseUseCase(*ctrl.store)
 
 	res, err := uc.Execute(id)
-	if err != nil {
-		return c.JSON(500, errors.InternnalServerError)
-	}
-
-	if res == nil {
+	if err != nil || res == nil {
 		return c.JSON(404, errors.NotFoundError)
 	}
 
